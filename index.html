@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Data to Airtable</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-field input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-field button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-field button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Submit Data to Airtable</h1>
+        <form id="airtable-form">
+            <div class="form-field">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-field">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <p id="response-message"></p>
+    </div>
+    <script>
+        document.getElementById('airtable-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+
+            fetch('https://api.airtable.com/v0/appczz4aUippDHjiT/Table%201', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer patYofql1gBKsqVk3.092a50fcc480f399410c16baf8e6e0e922dee44f634d64f69c274313180f3900',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fields: {
+                        Name: name,
+                        Email: email
+                    }
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response-message').textContent = 'Data submitted successfully!';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('response-message').textContent = 'An error occurred.';
+            });
+        });
+    </script>
+</body>
+</html>
